@@ -13,7 +13,12 @@
         <p class="text-gray-600 text-center mt-4">This is your dashboard.</p>
         
         <div class="mt-6 text-center">
-            <a href="{% url 'logout' %}" class="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg">Logout</a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg">
+                    Logout
+                </button>
+            </form>
         </div>
     </div>
 </body>
