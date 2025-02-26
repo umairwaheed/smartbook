@@ -1,6 +1,7 @@
 import json
 
 from asgiref.sync import sync_to_async
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
 from rest_framework import status
@@ -22,10 +23,12 @@ class BookListAPIView(APIView):
         return Response(serializer.data)
 
 
-class FetchBookAsyncAPIView(View):
+class FetchBookAsyncAPIView(LoginRequiredMixin, View):
     """
     Asynchronously fetches a book from Project Gutenberg by ID and saves it.
     """
+
+    raise_exception = True  # do not redirect to login page
 
     async def post(self, request):
         try:
