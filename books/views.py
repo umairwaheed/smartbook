@@ -2,23 +2,29 @@ import json
 
 from asgiref.sync import sync_to_async
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.views import View
 from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-from books.models import Book
+from books.models import Book, UserBookAccess
 from books.serializers import BookSerializer
 from books.utils import fetch_gutenberg_book
 
 
-class BookViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    ViewSet for listing books.
-    """
-
+class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
+
+    @action(detail=True, methods=["post"])
+    def access(self, request, pk=None):
+        book = get_object_or_404(Book, pk=pk)
+        user = request.user
+        UserBookAccess.objects.get_or_create(user=user, book=book)
+        return Response({"message": "Book access recorded."})
 
 
 class UserBooksViewSet(viewsets.ReadOnlyModelViewSet):

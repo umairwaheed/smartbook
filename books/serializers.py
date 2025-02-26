@@ -1,9 +1,18 @@
 from rest_framework import serializers
 
-from .models import Book
+from books.models import Book
 
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = "__all__"  # Include all fields
+        fields = [
+            "gutenberg_id",
+            "title",
+            "author",
+            "language",
+            "download_url",
+            "text",
+            "created_at",
+        ]
+        read_only_fields = ["created_at"]
