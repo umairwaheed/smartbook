@@ -19,12 +19,12 @@ async def fetch_gutenberg_book(book_id: int):
         try:
             # Fetch book content asynchronously
             content_response = await client.get(content_url)
-            if content_response.status_code != 200:
+            if content_response.status_code // 100 != 2:
                 raise Exception(f"Failed to fetch book content for ID {book_id}")
 
             # Fetch metadata asynchronously
             metadata_response = await client.get(metadata_url)
-            if metadata_response.status_code != 200:
+            if metadata_response.status_code // 100 != 2:
                 raise Exception(f"Failed to fetch metadata for ID {book_id}")
 
             soup = BeautifulSoup(metadata_response.text, "html.parser")
