@@ -142,3 +142,11 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.JSONParser",
     ],
 }
+
+# Redirects unauthenticated users to the login page
+LOGIN_URL = "/users/login/"
+
+# Redirect users to home or dashboard after login
+LOGIN_REDIRECT_URL = "/"
+
+LOGOUT_REDIRECT_URL = "/users/login/"
