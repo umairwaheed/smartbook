@@ -52,7 +52,7 @@ class FetchBookAsyncAPIView(View):
                     {"error": "Book ID is required"}, status=status.HTTP_400_BAD_REQUEST
                 )
 
-            book, created = await fetch_gutenberg_book(int(book_id))
+            book, created = await fetch_gutenberg_book(int(book_id), user)
 
             if not book:
                 return JsonResponse(

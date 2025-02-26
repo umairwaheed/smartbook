@@ -7,7 +7,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 
-from books.models import Book
+from books.models import Book, UserBookAccess
 from users.models import User
 
 
@@ -82,6 +82,13 @@ class FetchBookAPITestCase(APITestCase):
         ]
 
         await self.async_client.aforce_login(self.user)
+        self.assertFalse(await Book.objects.filter(gutenberg_id=self.book_id).aexists())
+        self.assertFalse(
+            await UserBookAccess.objects.filter(
+                user=self.user, book__gutenberg_id=self.book_id
+            ).aexists()
+        )
+
         response = await self.async_client.post(
             "/api/fetch-book/",
             data=json.dumps({"book_id": self.book_id}),
@@ -100,6 +107,13 @@ class FetchBookAPITestCase(APITestCase):
         mock_get.assert_any_call(self.gutenberg_content_url)
         mock_get.assert_any_call(self.gutenberg_metadata_url)
         self.assertEqual(mock_get.call_count, 2)
+
+        self.assertTrue(await Book.objects.filter(gutenberg_id=self.book_id).aexists())
+        self.assertTrue(
+            await UserBookAccess.objects.filter(
+                user=self.user, book__gutenberg_id=self.book_id
+            ).aexists()
+        )
 
     async def test_fetch_book_api_without_authentication(self):
         """
