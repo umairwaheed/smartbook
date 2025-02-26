@@ -17,6 +17,10 @@ async def fetch_gutenberg_book(book_id: int):
 
     async with httpx.AsyncClient(timeout=10) as client:
         try:
+            book = await Book.objects.filter(gutenberg_id=book_id).afirst()
+            if book:
+                return book, False
+
             # Fetch book content asynchronously
             content_response = await client.get(content_url)
             if content_response.status_code // 100 != 2:
@@ -36,17 +40,14 @@ async def fetch_gutenberg_book(book_id: int):
             author_tag = soup.find("a", rel="marcrel:aut")
             author = author_tag.text.strip() if author_tag else "Unknown Author"
 
-            book, created = await sync_to_async(Book.objects.get_or_create)(
+            book = await Book.objects.acreate(
                 gutenberg_id=book_id,
-                defaults={
-                    "title": title,
-                    "author": author,
-                    "download_url": content_url,
-                    "text": content_response.text,
-                },
+                title=title,
+                author=author,
+                download_url=content_url,
+                text=content_response.text,
             )
-
-            return book, created
+            return book, True
 
         except Exception as e:
             logging.error(f"Failed to fetch book with ID {book_id}: {e}")
