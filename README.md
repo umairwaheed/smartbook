@@ -9,7 +9,7 @@ SmartBook is a Django-based application that allows users to fetch and save book
 
 ### 1️⃣ Prerequisites
 Ensure you have the following installed:
-- **Python 3.8+**
+- **Python 3.13+**
 - **pip** (comes with Python)
 - **virtualenv** (recommended)
 - **PostgreSQL** (optional for production)
