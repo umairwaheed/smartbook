@@ -31,3 +31,7 @@ plugins = ["django_stubs.plugin"]
 ignore_missing_imports = true
 exclude = ["migrations", "venv", ".venv"]
 python_version = "3.13"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "smartbook.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
