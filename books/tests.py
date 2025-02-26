@@ -90,7 +90,7 @@ class FetchBookAPITestCase(APITestCase):
         ]
 
         # Make the API request
-        response = await self.client.post(
+        response = await self.async_client.post(
             "/api/fetch-book/",
             data=json.dumps({"book_id": self.book_id}),
             content_type="application/json",
@@ -108,8 +108,8 @@ class FetchBookAPITestCase(APITestCase):
         self.assertEqual(response_json["book"]["text"], self.mock_book_content)
 
         # Ensure HTTP calls were made correctly
-        mock_get.assert_any_call(self.gutenberg_content_url, timeout=10)
-        mock_get.assert_any_call(self.gutenberg_metadata_url, timeout=10)
+        mock_get.assert_any_call(self.gutenberg_content_url)
+        mock_get.assert_any_call(self.gutenberg_metadata_url)
         self.assertEqual(
             mock_get.call_count, 2
         )  # Ensure exactly two requests were made
