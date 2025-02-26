@@ -1,7 +1,6 @@
 import json
 
 from asgiref.sync import sync_to_async
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
 from rest_framework import status
@@ -23,14 +22,24 @@ class BookListAPIView(APIView):
         return Response(serializer.data)
 
 
-class FetchBookAsyncAPIView(LoginRequiredMixin, View):
+class FetchBookAsyncAPIView(View):
     """
     Asynchronously fetches a book from Project Gutenberg by ID and saves it.
     """
 
-    raise_exception = True  # do not redirect to login page
+    @sync_to_async
+    def get_authenticated_user(self, request):
+        if request.user.is_authenticated:
+            return request.user
 
     async def post(self, request):
+        user = await self.get_authenticated_user(request)
+        if not user:
+            return JsonResponse(
+                {"error": "Authentication required"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         try:
             data = await sync_to_async(request.body.decode)(
                 "utf-8"

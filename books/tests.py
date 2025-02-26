@@ -71,6 +71,7 @@ class FetchBookAPITestCase(APITestCase):
             </body>
         </html>
         """
+        cls.user = User.objects.create_user(username="testuser", password="password123")
 
     @pytest.mark.asyncio
     @patch("httpx.AsyncClient.get")
@@ -89,6 +90,7 @@ class FetchBookAPITestCase(APITestCase):
             ),  # Mock metadata response
         ]
 
+        await self.async_client.aforce_login(self.user)
         # Make the API request
         response = await self.async_client.post(
             "/api/fetch-book/",
@@ -113,3 +115,19 @@ class FetchBookAPITestCase(APITestCase):
         self.assertEqual(
             mock_get.call_count, 2
         )  # Ensure exactly two requests were made
+
+    @pytest.mark.asyncio
+    @patch("httpx.AsyncClient.get")
+    async def test_fetch_book_api_without_authentication(self, mock_get):
+        """
+        Tests fetching book content without authentication.
+        """
+
+        # Make the API request
+        response = await self.async_client.post(
+            "/api/fetch-book/",
+            data=json.dumps({"book_id": self.book_id}),
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 403)
