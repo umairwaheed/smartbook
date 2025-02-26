@@ -144,9 +144,9 @@ REST_FRAMEWORK = {
 }
 
 # Redirects unauthenticated users to the login page
-LOGIN_URL = "/users/login/"
+LOGIN_URL = "/login/"
 
 # Redirect users to home or dashboard after login
 LOGIN_REDIRECT_URL = "/"
 
-LOGOUT_REDIRECT_URL = "/users/login/"
+LOGOUT_REDIRECT_URL = "/login/"
