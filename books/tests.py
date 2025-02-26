@@ -9,8 +9,6 @@ from rest_framework.test import APIClient, APITestCase
 from books.models import Book
 from users.models import User
 
-pytestmark = pytest.mark.django_db  # Ensure database access for Django tests
-
 
 class BookAPITestCase(TestCase):
     """Test case for the Book API endpoint."""
