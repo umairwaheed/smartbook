@@ -1,8 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import User
+
+from users.models import User
+
 
 class Book(models.Model):
     """Model to store Project Gutenberg book details."""
+
     gutenberg_id = models.PositiveIntegerField(unique=True)
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255, blank=True, null=True)
@@ -17,12 +20,13 @@ class Book(models.Model):
 
 class UserBookAccess(models.Model):
     """Model to track books accessed by users."""
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     accessed_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'book')
+        unique_together = ("user", "book")
 
     def __str__(self):
         return f"{self.user.username} accessed {self.book.title}"
