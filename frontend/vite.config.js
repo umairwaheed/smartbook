@@ -5,8 +5,8 @@ import path from 'path';
 export default defineConfig({
     plugins: [react()],
     build: {
-        outDir: '../static/frontend',  // This ensures React builds into Django's static folder
         emptyOutDir: true,
+        manifest: true,
     },
     server: {
         proxy: {
