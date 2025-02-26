@@ -1,4 +1,7 @@
+import logging
+
 import httpx
+from asgiref.sync import sync_to_async
 from bs4 import BeautifulSoup
 
 from books.models import Book
@@ -19,8 +22,6 @@ async def fetch_gutenberg_book(book_id: int):
             if content_response.status_code != 200:
                 raise Exception(f"Failed to fetch book content for ID {book_id}")
 
-            content = content_response.text
-
             # Fetch metadata asynchronously
             metadata_response = await client.get(metadata_url)
             if metadata_response.status_code != 200:
@@ -35,21 +36,18 @@ async def fetch_gutenberg_book(book_id: int):
             author_tag = soup.find("a", rel="marcrel:aut")
             author = author_tag.text.strip() if author_tag else "Unknown Author"
 
-            # Since Django ORM is **synchronous**, we must run it in a thread
-            from asgiref.sync import sync_to_async
-
             book, created = await sync_to_async(Book.objects.get_or_create)(
                 gutenberg_id=book_id,
                 defaults={
                     "title": title,
                     "author": author,
                     "download_url": content_url,
-                    "text": content,
+                    "text": content_response.text,
                 },
             )
 
             return book, created
 
         except Exception as e:
-            print(f"Error fetching book: {e}")
+            logging.error(f"Failed to fetch book with ID {book_id}: {e}")
             return None, False
