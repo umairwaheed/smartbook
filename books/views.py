@@ -5,10 +5,8 @@ from django.http import JsonResponse
 from django.views import View
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from books.models import Book, UserBookAccess
+from books.models import Book
 from books.serializers import BookSerializer
 from books.utils import fetch_gutenberg_book
 
@@ -23,15 +21,16 @@ class BookViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class BookAccessListAPIView(APIView):
+class UserBooksViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet for listing books accessed by the authenticated user.
+    """
+
+    serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        books = UserBookAccess.objects.filter(user=request.user).values_list(
-            "book", flat=True
-        )
-        serializer = BookSerializer(books, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        return Book.objects.filter(userbookaccess__user=self.request.user)
 
 
 class FetchBookAsyncAPIView(View):

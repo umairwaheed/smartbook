@@ -181,3 +181,59 @@ class FetchBookFailureTestCase(APITestCase):
 
         assert response.status_code == 500
         assert "Failed to fetch book" in response.json()["error"]
+
+
+class UserBooksViewSetTestCase(APITestCase):
+    def setUp(self):
+        """Set up test users and books."""
+        # Create test users
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword"
+        )
+        self.other_user = User.objects.create_user(
+            username="otheruser", password="otherpassword"
+        )
+
+        # Create books
+        self.book1 = Book.objects.create(
+            gutenberg_id=1, title="Book One", download_url="http://example.com/book1"
+        )
+        self.book2 = Book.objects.create(
+            gutenberg_id=2, title="Book Two", download_url="http://example.com/book2"
+        )
+        self.book3 = Book.objects.create(
+            gutenberg_id=3, title="Book Three", download_url="http://example.com/book3"
+        )
+
+        # Grant access to books for self.user
+        UserBookAccess.objects.create(user=self.user, book=self.book1)
+        UserBookAccess.objects.create(user=self.user, book=self.book2)
+
+        # Grant access to a different book for other_user
+        UserBookAccess.objects.create(user=self.other_user, book=self.book3)
+
+        # Authenticate test user
+        self.client.login(username="testuser", password="testpassword")
+
+    def test_list_user_accessed_books(self):
+        """Test retrieving books accessed by the authenticated user."""
+        response = self.client.get("/api/user-books/")  # Adjust endpoint as needed
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            len(response.data), 2
+        )  # Should only return books accessed by self.user
+
+        book_titles = {book["title"] for book in response.data}
+        self.assertIn("Book One", book_titles)
+        self.assertIn("Book Two", book_titles)
+        self.assertNotIn("Book Three", book_titles)  # This book belongs to another user
+
+    def test_unauthenticated_access(self):
+        """Test that an unauthenticated user cannot access the endpoint."""
+        self.client.logout()
+        response = self.client.get("/api/user-books/")
+
+        self.assertEqual(
+            response.status_code, status.HTTP_403_FORBIDDEN
+        )  # Authentication required
