@@ -12,4 +12,10 @@ isort .
 echo "🔄 Running flake8..."
 flake8 .
 
+echo "🔄 Running djLint..."
+djlint users/templates/users/*.html --reformat --indent 2
+
+echo "🔄 Running frontend linters..."
+cd frontend; npm run lint; cd ..
+
 echo "✅ Formatting and linting complete!"
