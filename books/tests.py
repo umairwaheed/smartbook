@@ -114,9 +114,7 @@ class FetchBookAPITestCase(APITestCase):
             mock_get.call_count, 2
         )  # Ensure exactly two requests were made
 
-    @pytest.mark.asyncio
-    @patch("httpx.AsyncClient.get")
-    async def test_fetch_book_api_without_authentication(self, mock_get):
+    async def test_fetch_book_api_without_authentication(self):
         """
         Tests fetching book content without authentication.
         """
