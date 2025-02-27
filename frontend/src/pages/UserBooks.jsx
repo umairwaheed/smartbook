@@ -42,7 +42,7 @@ export default function UserBooks() {
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-bold mb-4 text-center">📚 Books List</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center">My Books</h2>
 
       {books.length === 0 ? (
         <p className="text-gray-600 text-center">No books available.</p>
