@@ -11,7 +11,7 @@ from rest_framework.response import Response
 
 from books.models import Book, UserBookAccess
 from books.serializers import BookSerializer
-from books.utils import fetch_gutenberg_book
+from books.utils import NotFoundException, fetch_gutenberg_book
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -77,7 +77,13 @@ class FetchBookAsyncAPIView(View):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            book, created = await fetch_gutenberg_book(book_id, user)
+            try:
+                book, created = await fetch_gutenberg_book(book_id, user)
+            except NotFoundException:
+                return JsonResponse(
+                    {"error": "Book not found on Project Gutenberg"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
             if not book:
                 return JsonResponse(

@@ -164,8 +164,8 @@ class FetchBookFailureTestCase(APITestCase):
             content_type="application/json",
         )
 
-        assert response.status_code == 500
-        assert response.json() == {"error": "Failed to fetch book"}
+        assert response.status_code == 400
+        assert response.json() == {"error": "Book not found on Project Gutenberg"}
 
     @patch("httpx.AsyncClient.get")
     async def test_fetch_book_http_timeout(self, mock_get):
