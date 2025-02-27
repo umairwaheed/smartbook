@@ -3,6 +3,7 @@ import Logout from "./components/Logout";
 import Books from "./pages/Books";
 import UserBooks from "./pages/UserBooks";
 import FetchBook from "./pages/FetchBook";
+import BookReader from "./pages/BookReader";
 
 export default function App() {
   return (
@@ -63,6 +64,7 @@ export default function App() {
             <Route path="/" element={<UserBooks />} />
             <Route path="/search" element={<FetchBook />} />
             <Route path="/books" element={<Books />} />
+            <Route path="/books/:bookId/read" element={<BookReader />} />
           </Routes>
         </main>
       </div>
