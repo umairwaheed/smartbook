@@ -3,8 +3,8 @@
 # Function to watch index.html and copy it on change
 watch_files() {
     echo "Watching frontend/static/index.html for changes..."
-    watchmedo shell-command --patterns="index.html" --command="cp frontend/static/index.html frontend/templates/frontend/index.html" --recursive frontend/static/
+    watchmedo shell-command --patterns="index.html" --command="cmp -s frontend/static/index.html frontend/templates/frontend/index.html || cp frontend/static/index.html frontend/templates/frontend/index.html" --recursive frontend/static/
 }
 
-# Start watching for file changes
+# Start watching
 watch_files
