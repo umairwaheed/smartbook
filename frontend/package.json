@@ -4,12 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite build --watch --emptyOutDir --base /static --outDir static",
+    "dev": "vite",
+    "watch": "vite build --watch --emptyOutDir --base /static --outDir static",
     "build": "vite build",
     "lint": "eslint . && prettier --write .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.0.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
