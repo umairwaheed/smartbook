@@ -1,3 +1,20 @@
 #!/bin/bash
-cp frontend/static/index.html frontend/templates/frontend/index.html
-./manage.py runserver
+
+# Function to start the Django server
+start_server() {
+    echo "Starting Django server..."
+    ./manage.py runserver
+}
+
+# Function to watch index.html and copy it on change
+watch_files() {
+    echo "Watching frontend/static/index.html for changes..."
+    watchmedo shell-command --patterns="index.html" --command="cp frontend/static/index.html frontend/templates/frontend/index.html" --recursive frontend/static/ &
+}
+
+# Start watching for file changes
+watch_files
+
+# Start the Django server
+start_server
+
