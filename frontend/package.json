@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite build --watch --emptyOutDir --base /static --outDir static",
     "build": "vite build",
     "lint": "eslint . && prettier --write .",
     "preview": "vite preview"

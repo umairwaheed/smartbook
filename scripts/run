@@ -1,0 +1,3 @@
+#!/bin/bash
+cp frontend/static/index.html frontend/templates/index.html
+./manage.py runserver

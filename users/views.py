@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from users.forms import LoginForm, RegisterForm
@@ -21,11 +20,6 @@ def login_view(request):
         form = LoginForm()
 
     return render(request, "users/login.html", {"form": form})
-
-
-@login_required
-def index_view(request):
-    return render(request, "users/index.html")
 
 
 def register_view(request):
