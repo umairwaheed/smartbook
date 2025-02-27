@@ -1,9 +1,9 @@
 import { Routes, Route, Link } from "react-router";
 import Logout from "./components/Logout";
+import Books from "./pages/Books";
 
 const Home = () => <h2 className="text-xl font-bold">🏠 Home Page</h2>;
 const Search = () => <h2 className="text-xl font-bold">🔍 Search Page</h2>;
-const Books = () => <h2 className="text-xl font-bold">📚 Books Page</h2>;
 
 export default function App() {
   return (
