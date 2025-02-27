@@ -71,18 +71,43 @@ export default function FetchBook() {
 
       {/* Display Book Details */}
       {book && (
-        <div className="mt-6 border p-4 rounded-lg shadow">
-          <h3 className="text-lg font-bold text-blue-600">{book.title}</h3>
-          {book.author && <p className="text-gray-700">By: {book.author}</p>}
-          <p className="text-sm text-gray-500">Language: {book.language || "Unknown"}</p>
-          <a
-            href={book.download_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-2 text-white bg-green-500 px-4 py-2 rounded hover:bg-green-600"
-          >
-            Download Book
-          </a>
+        <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+          <h2 className="text-2xl font-bold text-center mb-6">Book Details</h2>
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full border-collapse border border-gray-300">
+              <tbody>
+                <tr className="bg-gray-200">
+                  <td className="p-3 border border-gray-300 font-bold">Title</td>
+                  <td className="p-3 border border-gray-300">{book.title}</td>
+                </tr>
+                <tr className="bg-gray-50">
+                  <td className="p-3 border border-gray-300 font-bold">Author</td>
+                  <td className="p-3 border border-gray-300">{book.author || "Unknown"}</td>
+                </tr>
+                <tr className="bg-gray-200">
+                  <td className="p-3 border border-gray-300 font-bold">Language</td>
+                  <td className="p-3 border border-gray-300">{book.language || "N/A"}</td>
+                </tr>
+                <tr className="bg-gray-50">
+                  <td className="p-3 border border-gray-300 font-bold">Category</td>
+                  <td className="p-3 border border-gray-300">{book.category || "N/A"}</td>
+                </tr>
+                <tr className="bg-gray-200">
+                  <td className="p-3 border border-gray-300 font-bold">Summary</td>
+                  <td className="p-3 border border-gray-300">
+                    {book.summary || "No summary available"}
+                  </td>
+                </tr>
+                <tr className="bg-gray-50">
+                  <td className="p-3 border border-gray-300 font-bold">Created At</td>
+                  <td className="p-3 border border-gray-300">
+                    {new Date(book.created_at).toLocaleDateString()}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
