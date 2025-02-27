@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import BookList from "../components/BookList";
 
 export default function Books() {
   const [books, setBooks] = useState([]);
@@ -40,31 +41,5 @@ export default function Books() {
     return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
   }
 
-  return (
-    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-bold mb-4 text-center">Books List</h2>
-
-      {books.length === 0 ? (
-        <p className="text-gray-600 text-center">No books available.</p>
-      ) : (
-        <ul className="space-y-4">
-          {books.map((book) => (
-            <li key={book.gutenberg_id} className="border p-4 rounded-lg shadow">
-              <h3 className="text-lg font-semibold text-blue-600">{book.title}</h3>
-              {book.author && <p className="text-gray-700">By: {book.author}</p>}
-              <p className="text-sm text-gray-500">Language: {book.language || "Unknown"}</p>
-              <a
-                href={book.download_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block mt-2 text-white bg-green-500 px-4 py-2 rounded hover:bg-green-600"
-              >
-                Download
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+  return <BookList books={books} />;
 }

@@ -23,7 +23,7 @@ async def fetch_gutenberg_book(book_id: int, user: User) -> tuple[Book, bool]:
     Asynchronously fetches book content and metadata from Project Gutenberg and
     saves it to the database.
     """
-    content_url = f"https://www.gutenberg.org/files/{book_id}/{book_id}.txt"
+    content_url = f"https://www.gutenberg.org/cache/epub/{book_id}/pg{book_id}.txt"
     metadata_url = f"https://www.gutenberg.org/ebooks/{book_id}"
 
     async with httpx.AsyncClient(timeout=10) as client:
