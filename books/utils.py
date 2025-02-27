@@ -107,3 +107,4 @@ def save_book_access(book: Book, user: User) -> Book:
     with transaction.atomic():
         book.save()
         UserBookAccess.objects.create(user=user, book=book)
+        return book
