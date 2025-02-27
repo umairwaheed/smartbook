@@ -53,7 +53,7 @@ class FetchBookAPITestCase(APITestCase):
         """Set up initial test data (runs once for all test cases)."""
         cls.book_id = 1234
         cls.gutenberg_content_url = (
-            f"https://www.gutenberg.org/files/{cls.book_id}/{cls.book_id}-0.txt"
+            f"https://www.gutenberg.org/files/{cls.book_id}/{cls.book_id}.txt"
         )
         cls.gutenberg_metadata_url = f"https://www.gutenberg.org/ebooks/{cls.book_id}"
 
@@ -62,8 +62,10 @@ class FetchBookAPITestCase(APITestCase):
         <html>
             <head><title>Sample Book</title></head>
             <body>
-                <h1 class="header">Sample Book Title</h1>
-                <a rel="marcrel:aut">Sample Author</a>
+                <table>
+                    <tr><th>Title</th><td>Sample Book Title</td></tr>
+                    <tr><th>Author</th><td>Sample Author</td></tr>
+                </table>
             </body>
         </html>
         """
