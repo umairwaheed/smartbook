@@ -10,8 +10,10 @@ class Book(models.Model):
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255, blank=True, null=True)
     language = models.CharField(max_length=50, blank=True, null=True)
+    category = models.CharField(max_length=50, blank=True, null=True)
     download_url = models.URLField()
     text = models.TextField(blank=True, null=True)
+    summary = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

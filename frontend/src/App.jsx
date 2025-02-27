@@ -2,8 +2,7 @@ import { Routes, Route, NavLink } from "react-router";
 import Logout from "./components/Logout";
 import Books from "./pages/Books";
 import UserBooks from "./pages/UserBooks";
-
-const Search = () => <h2 className="text-xl font-bold">🔍 Search Page</h2>;
+import FetchBook from "./pages/FetchBook";
 
 export default function App() {
   return (
@@ -44,7 +43,7 @@ export default function App() {
                   : "hover:bg-gray-700 block px-4 py-2 rounded"
               }
             >
-              Books
+              All Books
             </NavLink>
           </li>
         </ul>
@@ -62,7 +61,7 @@ export default function App() {
         <main className="flex-1 p-6 bg-white rounded-lg shadow-md m-4">
           <Routes>
             <Route path="/" element={<UserBooks />} />
-            <Route path="/search" element={<Search />} />
+            <Route path="/search" element={<FetchBook />} />
             <Route path="/books" element={<Books />} />
           </Routes>
         </main>

@@ -9,12 +9,21 @@ from books.models import Book, UserBookAccess
 from users.models import User
 
 
+def extract_info(soup, label):
+    element = soup.find("th", string=label)
+    if element:
+        data_td = element.find_next_sibling("td")
+        if data_td:
+            return data_td.get_text(strip=True)
+    return None
+
+
 async def fetch_gutenberg_book(book_id: int, user: User) -> tuple[Book, bool]:
     """
     Asynchronously fetches book content and metadata from Project Gutenberg and
     saves it to the database.
     """
-    content_url = f"https://www.gutenberg.org/files/{book_id}/{book_id}-0.txt"
+    content_url = f"https://www.gutenberg.org/files/{book_id}/{book_id}.txt"
     metadata_url = f"https://www.gutenberg.org/ebooks/{book_id}"
 
     async with httpx.AsyncClient(timeout=10) as client:
@@ -34,20 +43,28 @@ async def fetch_gutenberg_book(book_id: int, user: User) -> tuple[Book, bool]:
                 raise Exception(f"Failed to fetch metadata for ID {book_id}")
 
             soup = BeautifulSoup(metadata_response.text, "html.parser")
-            title = (
-                soup.find("h1", class_="header").text.strip()
-                if soup.find("h1", class_="header")
-                else f"Gutenberg Book {book_id}"
-            )
-            author_tag = soup.find("a", rel="marcrel:aut")
-            author = author_tag.text.strip() if author_tag else "Unknown Author"
+
+            author = extract_info(soup, "Author")
+            title = extract_info(soup, "Title")
+            language = extract_info(soup, "Language")
+            category = extract_info(soup, "Category")
+
+            summary_element = soup.find("th", string="Summary")
+            summary = ""
+            if summary_element:
+                summary_td = summary_element.find_next_sibling("td")
+                if summary_td:
+                    summary = summary_td.get_text(" ", strip=True)
 
             book = Book(
                 gutenberg_id=book_id,
                 title=title,
                 author=author,
+                language=language,
+                category=category,
                 download_url=content_url,
                 text=content_response.text,
+                summary=summary,
             )
             book = await sync_to_async(save_book_access)(book, user)
             return book, True
