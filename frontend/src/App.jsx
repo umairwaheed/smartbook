@@ -1,4 +1,5 @@
 import { Routes, Route, Link } from "react-router";
+import Logout from "./components/Logout";
 
 const Home = () => <h2 className="text-xl font-bold">🏠 Home Page</h2>;
 const Search = () => <h2 className="text-xl font-bold">🔍 Search Page</h2>;
@@ -27,7 +28,7 @@ export default function App() {
         {/* Topbar */}
         <header className="bg-white shadow-md p-4 flex justify-between items-center">
           <h1 className="text-lg font-bold">SmartBook</h1>
-          <button className="bg-red-500 text-white px-4 py-2 rounded">Logout</button>
+          <Logout />
         </header>
 
         {/* Main Content */}

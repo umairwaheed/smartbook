@@ -8,11 +8,11 @@ export default defineConfig({
   base: "/static/",
   server: {
     proxy: {
-      "/api": "http://127.0.0.1:8000", // Proxy API requests to Django
+      "/api": "http://127.0.0.1:8000",
     },
   },
   build: {
-    outDir: "./static", // Output to Django's static folder
+    outDir: "./static",
     emptyOutDir: true,
   },
 });
