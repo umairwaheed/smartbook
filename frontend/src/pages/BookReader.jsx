@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router";
 
 export default function BookPage() {
@@ -7,11 +7,7 @@ export default function BookPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchBook();
-  }, [bookId]);
-
-  const fetchBook = async () => {
+  const fetchBook = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -35,7 +31,11 @@ export default function BookPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [bookId]);
+
+  useEffect(() => {
+    fetchBook();
+  }, [fetchBook]);
 
   if (loading) {
     return <p className="text-center mt-10 text-gray-700">Loading book...</p>;
@@ -51,9 +51,7 @@ export default function BookPage() {
       {book.author && <p className="text-center text-gray-700 mb-4">By {book.author}</p>}
 
       <div className="h-[500px] overflow-y-auto p-4 border border-gray-300 bg-gray-100 rounded-lg">
-        <pre className="whitespace-pre-wrap text-gray-800 text-lg leading-relaxed">
-          {book.text}
-        </pre>
+        <pre className="whitespace-pre-wrap text-gray-800 text-lg leading-relaxed">{book.text}</pre>
       </div>
     </div>
   );

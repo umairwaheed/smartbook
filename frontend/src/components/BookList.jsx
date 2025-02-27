@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Link } from "react-router";
 
 export default function BookList({ books = [] }) {
@@ -26,22 +27,14 @@ export default function BookList({ books = [] }) {
               </tr>
             ) : (
               books.map((book, index) => (
-                <tr
-                  key={book.gutenberg_id}
-                  className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
-                >
+                <tr key={book.gutenberg_id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
                   <td className="p-4 border border-gray-300">{book.gutenberg_id}</td>
                   <td className="p-4 border border-gray-300">{book.title}</td>
-                  <td className="p-4 border border-gray-300">
-                    {book.author || "Unknown"}
-                  </td>
+                  <td className="p-4 border border-gray-300">{book.author || "Unknown"}</td>
                   <td className="p-4 border border-gray-300">{book.language || "N/A"}</td>
                   <td className="p-4 border border-gray-300">{book.category || "N/A"}</td>
                   <td className="p-4 border border-gray-300">
-                    <Link
-                      to={`/books/${book.id}/read`}
-                      className="text-blue-500 hover:underline"
-                    >
+                    <Link to={`/books/${book.id}/read`} className="text-blue-500 hover:underline">
                       Read
                     </Link>
                   </td>
@@ -54,3 +47,16 @@ export default function BookList({ books = [] }) {
     </div>
   );
 }
+
+BookList.propTypes = {
+  books: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      gutenberg_id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      author: PropTypes.string,
+      language: PropTypes.string,
+      category: PropTypes.string,
+    })
+  ),
+};
