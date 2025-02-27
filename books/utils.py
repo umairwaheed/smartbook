@@ -31,7 +31,6 @@ def extract_info(soup, label):
 async def fetch_gutenberg_book(book_id: int, user: User) -> tuple[Book, bool]:
     """
     Asynchronously fetches book content and metadata from Project Gutenberg.
-    If the book is not found, raises a NotFoundException.
     """
     content_url = f"https://www.gutenberg.org/cache/epub/{book_id}/pg{book_id}.txt"
     metadata_url = f"https://www.gutenberg.org/ebooks/{book_id}"
@@ -44,27 +43,23 @@ async def fetch_gutenberg_book(book_id: int, user: User) -> tuple[Book, bool]:
                 await UserBookAccess.objects.aget_or_create(user=user, book=book)
                 return book, False
 
-            # Fetch book content
             content_response = await client.get(content_url)
             if content_response.status_code == 404:
                 raise NotFoundException(
                     f"Book {book_id} not found on Project Gutenberg"
                 )
 
-            # Fetch metadata
             metadata_response = await client.get(metadata_url)
             if metadata_response.status_code == 404:
                 raise NotFoundException(f"Metadata for book {book_id} not found")
 
             soup = BeautifulSoup(metadata_response.text, "html.parser")
 
-            # Extract metadata safely
             title = extract_info(soup, "Title")
             author = extract_info(soup, "Author")
             language = extract_info(soup, "Language")
             category = extract_info(soup, "Category")
 
-            # Extract summary (optional)
             summary = "No summary available"
             summary_element = soup.find("th", string="Summary")
             if summary_element:
@@ -72,7 +67,6 @@ async def fetch_gutenberg_book(book_id: int, user: User) -> tuple[Book, bool]:
                 if summary_td:
                     summary = summary_td.get_text(" ", strip=True)
 
-            # Save book and track user access
             book = Book(
                 gutenberg_id=book_id,
                 title=title,
@@ -83,6 +77,7 @@ async def fetch_gutenberg_book(book_id: int, user: User) -> tuple[Book, bool]:
                 text=content_response.text,
                 summary=summary,
             )
+            # Book is not saved yet. Call save_book_access will save it.
             book = await sync_to_async(save_book_access)(book, user)
             return book, True
 
