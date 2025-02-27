@@ -102,7 +102,6 @@ async def fetch_gutenberg_book(book_id: int, user: User) -> tuple[Book, bool]:
     return None, False
 
 
-
 def save_book_access(book: Book, user: User) -> Book:
     with transaction.atomic():
         book.save()
