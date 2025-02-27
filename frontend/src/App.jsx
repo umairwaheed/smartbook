@@ -1,4 +1,4 @@
-import { Routes, Route, Link } from "react-router";
+import { Routes, Route, NavLink } from "react-router";
 import Logout from "./components/Logout";
 import Books from "./pages/Books";
 import UserBooks from "./pages/UserBooks";
@@ -11,14 +11,41 @@ export default function App() {
       {/* Sidebar */}
       <aside className={`bg-gray-800 text-white w-64 p-4 transition-all md:block`}>
         <ul>
-          <li className="py-2 hover:bg-gray-700 p-2 rounded">
-            <Link to="/">My Books</Link>
+          <li className="py-2 p-2 rounded">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive
+                  ? "bg-gray-700 block px-4 py-2 rounded text-yellow-400"
+                  : "hover:bg-gray-700 block px-4 py-2 rounded"
+              }
+            >
+              My Books
+            </NavLink>
           </li>
-          <li className="py-2 hover:bg-gray-700 p-2 rounded">
-            <Link to="/search">Search</Link>
+          <li className="py-2 p-2 rounded">
+            <NavLink
+              to="/search"
+              className={({ isActive }) =>
+                isActive
+                  ? "bg-gray-700 block px-4 py-2 rounded text-yellow-400"
+                  : "hover:bg-gray-700 block px-4 py-2 rounded"
+              }
+            >
+              Search
+            </NavLink>
           </li>
-          <li className="py-2 hover:bg-gray-700 p-2 rounded">
-            <Link to="/books">Books</Link>
+          <li className="py-2 p-2 rounded">
+            <NavLink
+              to="/books"
+              className={({ isActive }) =>
+                isActive
+                  ? "bg-gray-700 block px-4 py-2 rounded text-yellow-400"
+                  : "hover:bg-gray-700 block px-4 py-2 rounded"
+              }
+            >
+              Books
+            </NavLink>
           </li>
         </ul>
       </aside>
