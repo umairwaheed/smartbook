@@ -53,7 +53,7 @@ class FetchBookAPITestCase(APITestCase):
         """Set up initial test data (runs once for all test cases)."""
         cls.book_id = 1234
         cls.gutenberg_content_url = (
-            f"https://www.gutenberg.org/files/{cls.book_id}/{cls.book_id}.txt"
+            f"https://www.gutenberg.org/cache/epub/{cls.book_id}/pg{cls.book_id}.txt"
         )
         cls.gutenberg_metadata_url = f"https://www.gutenberg.org/ebooks/{cls.book_id}"
 
