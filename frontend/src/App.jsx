@@ -15,7 +15,7 @@ export default function App() {
       <div className="flex flex-col flex-1">
         {/* Topbar */}
         <header className="bg-white shadow-md p-4 flex justify-between items-center">
-          <h1 className="text-lg font-bold">Topbar</h1>
+          <h1 className="text-lg font-bold"></h1>
           <button className="bg-red-500 text-white px-4 py-2 rounded">Logout</button>
         </header>
 
