@@ -9,8 +9,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from books.models import Book, UserBookAccess
-from books.serializers import BookSerializer
+from books.models import Book, BookAnalysis, UserBookAccess
+from books.serializers import BookAnalysisSerializer, BookSerializer
 from books.utils import NotFoundException, fetch_gutenberg_book
 
 
@@ -25,6 +25,20 @@ class BookViewSet(viewsets.ModelViewSet):
         user = request.user
         UserBookAccess.objects.get_or_create(user=user, book=book)
         return Response({"message": "Book access recorded."})
+
+    @action(detail=True, methods=["get"])
+    def analysis(self, request, pk=None):
+        """Retrieve the analysis object of a book"""
+        book = get_object_or_404(Book, pk=pk)
+        try:
+            analysis = BookAnalysis.objects.get(book=book)
+            serializer = BookAnalysisSerializer(analysis)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except BookAnalysis.DoesNotExist:
+            return Response(
+                {"error": "Analysis not found for this book."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
 
 class UserBooksViewSet(viewsets.ReadOnlyModelViewSet):

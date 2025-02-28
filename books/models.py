@@ -32,3 +32,11 @@ class UserBookAccess(models.Model):
 
     def __str__(self):
         return f"{self.user.username} accessed {self.book.title}"
+
+
+class BookAnalysis(models.Model):
+    book = models.OneToOneField(Book, on_delete=models.CASCADE)
+    characters = models.JSONField()
+    percent_complete = models.PositiveSmallIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    analysis_completed_at = models.DateTimeField(blank=True, null=True)

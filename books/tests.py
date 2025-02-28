@@ -7,7 +7,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 
-from books.models import Book, UserBookAccess
+from books.models import Book, BookAnalysis, UserBookAccess
 from users.models import User
 
 
@@ -239,3 +239,49 @@ class UserBooksViewSetTestCase(APITestCase):
         self.assertEqual(
             response.status_code, status.HTTP_403_FORBIDDEN
         )  # Authentication required
+
+
+class BookAnalysisAPITestCase(APITestCase):
+    def setUp(self):
+        # Create a user
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword"
+        )
+
+        # Create a book
+        self.book = Book.objects.create(gutenberg_id=123, title="Test Book")
+
+        # Create an analysis object for the book
+        self.analysis = BookAnalysis.objects.create(
+            book=self.book,
+            characters={"main": "Alice", "sidekick": "Bob"},
+            percent_complete=50,
+        )
+
+        self.analysis_url = f"/api/books/{self.book.id}/analysis/"
+
+        # Authenticate user
+        self.client.force_authenticate(user=self.user)
+
+    def test_get_book_analysis_success(self):
+        """Test retrieving the analysis object of a book successfully."""
+        response = self.client.get(self.analysis_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data["characters"], {"main": "Alice", "sidekick": "Bob"}
+        )
+        self.assertEqual(response.data["percent_complete"], 50)
+
+    def test_get_book_analysis_not_found(self):
+        """
+        Test retrieving analysis for a book that has no analysis (should
+        return 404).
+        """
+        new_book = Book.objects.create(
+            gutenberg_id=456, title="New Book Without Analysis"
+        )
+        new_analysis_url = f"/api/books/{new_book.id}/analysis/"
+
+        response = self.client.get(new_analysis_url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data["error"], "Analysis not found for this book.")
