@@ -26,19 +26,35 @@ class BookViewSet(viewsets.ModelViewSet):
         UserBookAccess.objects.get_or_create(user=user, book=book)
         return Response({"message": "Book access recorded."})
 
-    @action(detail=True, methods=["get"])
+    @action(detail=True, methods=["get", "post"])
     def analysis(self, request, pk=None):
-        """Retrieve the analysis object of a book"""
+        """Retrieve the book analysis or create a new one if it doesn't exist"""
         book = get_object_or_404(Book, pk=pk)
-        try:
-            analysis = BookAnalysis.objects.get(book=book)
-            serializer = BookAnalysisSerializer(analysis)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except BookAnalysis.DoesNotExist:
-            return Response(
-                {"error": "Analysis not found for this book."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+
+        if request.method == "GET":
+            try:
+                analysis = BookAnalysis.objects.get(book=book)
+                serializer = BookAnalysisSerializer(analysis)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except BookAnalysis.DoesNotExist:
+                return Response(
+                    {"error": "Analysis not found for this book."},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+        elif request.method == "POST":
+            # Prevent updating an existing analysis
+            if BookAnalysis.objects.filter(book=book).exists():
+                return Response(
+                    {"error": "Analysis already exists for this book."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            serializer = BookAnalysisSerializer(data={})
+            if serializer.is_valid():
+                serializer.save(book=book)  # Assign the book before saving
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserBooksViewSet(viewsets.ReadOnlyModelViewSet):

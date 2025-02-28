@@ -285,3 +285,52 @@ class BookAnalysisAPITestCase(APITestCase):
         response = self.client.get(new_analysis_url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.data["error"], "Analysis not found for this book.")
+
+
+class BookAnalysisPostAPITestCase(APITestCase):
+    def setUp(self):
+        """Setup a user and a book before each test"""
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword"
+        )
+
+        # Create a book
+        self.book = Book.objects.create(title="Test Book", gutenberg_id=123)
+
+        # URL for posting book analysis
+        self.analysis_url = f"/api/books/{self.book.id}/analysis/"
+
+        # Authenticate user
+        self.client.force_authenticate(user=self.user)
+
+    def test_create_book_analysis_success(self):
+        """Test creating a new book analysis when none exists"""
+        data = {}
+        response = self.client.post(self.analysis_url, data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Ensure the analysis was actually created in the database
+        self.assertTrue(BookAnalysis.objects.filter(book=self.book).exists())
+
+    def test_create_book_analysis_already_exists(self):
+        """Test that trying to create an analysis when one already exists returns 400"""
+        # Create an analysis first
+        BookAnalysis.objects.create(
+            book=self.book, characters={"main": "Alice"}, percent_complete=50
+        )
+
+        data = {"characters": {"main": "Charlie"}, "percent_complete": 30}
+        response = self.client.post(self.analysis_url, data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["error"], "Analysis already exists for this book."
+        )
+
+        # Ensure the original analysis is unchanged
+        analysis = BookAnalysis.objects.get(book=self.book)
+        self.assertEqual(
+            analysis.characters, {"main": "Alice"}
+        )  # Should still be the same
+        self.assertEqual(analysis.percent_complete, 50)  # Should remain unchanged
