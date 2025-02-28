@@ -46,7 +46,7 @@ class Command(BaseCommand):
                 # Get the next 50 sentences
                 next_batch = sentences[
                     analysis.last_read_index : analysis.last_read_index  # noqa: E203
-                    + 50
+                    + 200
                 ]
                 num_read = len(next_batch)
 
