@@ -37,6 +37,7 @@ class UserBookAccess(models.Model):
 class BookAnalysis(models.Model):
     book = models.OneToOneField(Book, on_delete=models.CASCADE)
     characters = models.JSONField(blank=True, null=True)
+    last_read_index = models.PositiveIntegerField(default=0)
     percent_complete = models.PositiveSmallIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     analysis_completed_at = models.DateTimeField(blank=True, null=True)

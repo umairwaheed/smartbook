@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from books.models import Book, UserBookAccess
+from books.models import Book, BookAnalysis, UserBookAccess
 
 
 class BookAdmin(admin.ModelAdmin):
@@ -17,6 +17,13 @@ class UserBookAccessAdmin(admin.ModelAdmin):
     ordering = ("-accessed_at",)
 
 
+class BookAnalysisAdmin(admin.ModelAdmin):
+    list_display = ("book", "percent_complete")
+    search_fields = ("book__title",)
+    ordering = ("-created_at",)
+
+
 # Register models
 admin.site.register(Book, BookAdmin)
 admin.site.register(UserBookAccess, UserBookAccessAdmin)
+admin.site.register(BookAnalysis, BookAnalysisAdmin)
