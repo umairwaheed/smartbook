@@ -1,7 +1,7 @@
-import re
 import time
-from datetime import timezone
+from datetime import datetime
 
+import stanza
 from django.core.management.base import BaseCommand
 
 from books.models import BookAnalysis
@@ -11,6 +11,9 @@ class Command(BaseCommand):
     help = "Processes book analysis in chunks of 50 sentences at a time."
 
     def handle(self, *args, **kwargs):
+        stanza.download("en")
+        nlp = stanza.Pipeline(lang="en", processors="tokenize")
+
         while True:
             # Fetch books that are not 100% complete
             books_to_analyze = BookAnalysis.objects.filter(percent_complete__lt=100)
@@ -25,14 +28,15 @@ class Command(BaseCommand):
             for analysis in books_to_analyze:
                 book = analysis.book
                 text = book.text if book.text else ""  # Get the book text
+                doc = nlp(text)
 
                 # Split text into sentences (basic approach using regex)
-                sentences = re.split(r"(?<=[.!?])\s+", text)
+                sentences = [x.text for x in doc.sentences]
 
                 # Check if we have more sentences to read
                 if analysis.last_read_index >= len(sentences):
                     analysis.percent_complete = 100
-                    analysis.analysis_completed_at = timezone.now()
+                    analysis.analysis_completed_at = datetime.now()
                     analysis.save()
                     self.stdout.write(
                         self.style.SUCCESS(f"Completed analysis for book: {book.title}")
