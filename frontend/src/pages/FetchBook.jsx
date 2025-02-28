@@ -43,14 +43,14 @@ export default function FetchBook() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-lg">
       <h2 className="text-2xl font-bold text-center mb-4">Fetch a Book</h2>
 
       {/* Search Input */}
       <div className="flex items-center space-x-2">
         <input
           type="text"
-          className="border p-2 rounded w-full"
+          className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-gray-400 w-full"
           placeholder="Enter Book ID..."
           value={bookId}
           onChange={(e) => setBookId(e.target.value)}
