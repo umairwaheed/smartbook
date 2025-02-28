@@ -20,19 +20,19 @@ export default function App() {
                   : "hover:bg-gray-700 block px-4 py-2 rounded"
               }
             >
-              My Books
+              Search
             </NavLink>
           </li>
           <li className="py-2 p-2 rounded">
             <NavLink
-              to="/search"
+              to="/my-books"
               className={({ isActive }) =>
                 isActive
                   ? "bg-gray-700 block px-4 py-2 rounded text-yellow-400"
                   : "hover:bg-gray-700 block px-4 py-2 rounded"
               }
             >
-              Search
+              My Books
             </NavLink>
           </li>
           <li className="py-2 p-2 rounded">
@@ -61,8 +61,8 @@ export default function App() {
         {/* Main Content */}
         <main className="flex-1 p-6 bg-white rounded-lg shadow-md m-4">
           <Routes>
-            <Route path="/" element={<UserBooks />} />
-            <Route path="/search" element={<FetchBook />} />
+            <Route path="/" element={<FetchBook />} />
+            <Route path="/my-books" element={<UserBooks />} />
             <Route path="/books" element={<Books />} />
             <Route path="/books/:bookId/read" element={<BookReader />} />
           </Routes>
