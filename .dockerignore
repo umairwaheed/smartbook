@@ -1,0 +1,8 @@
+venv
+db.sqlite3
+.flake8
+.gitignore
+.git
+pyproject.toml
+requirements-dev.txt
+.pytest_cache

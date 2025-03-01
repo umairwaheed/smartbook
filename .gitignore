@@ -48,7 +48,6 @@ yarn-error.log
 
 # Docker-related files (if using Docker)
 docker-compose.override.yml
-.dockerignore
 
 # Coverage reports
 htmlcov/
