@@ -99,8 +99,9 @@ class Command(BaseCommand):
                 ]
                 num_read = len(next_batch)
 
-                analysis.characters = analyze_chunk(
-                    " ".join(next_batch), analysis.characters or {}
+                analysis.characters = analysis.characters or {}
+                analysis.characters.update(
+                    analyze_chunk(" ".join(next_batch), analysis.characters)
                 )
                 analysis.last_read_index += num_read
                 analysis.percent_complete = min(
