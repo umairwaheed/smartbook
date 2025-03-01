@@ -18,24 +18,38 @@ client.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def analyze_chunk(chunk, characters):
-    system_content = "\n".join(
-        [
-            "<reasoning>",
-            "- Simple Change: yes",
-            "</reasoning>",
-            "",
-            "You are an expert at analyzing books. "
-            "You need to extract characters from a "
-            "given book excerpt, conduct a personality "
-            "analysis of each character, and list their "
-            "strengths and weaknesses. You will be given "
-            "an excerpt from a book along with current "
-            "data on characters.",
-            "" "# Output Format",
-            "Provide your response in JSON format.",
-            "Do not wrap the JSON object in a code block (```)",
-        ]
-    )
+    system_content = """
+        <reasoning>
+            - Simple Change: yes
+        </reasoning>
+
+        You are an expert at analyzing books. You need to analyze the entire
+        book. You will be given one chunk of the book at a time. You will be
+        provided with the current data on characters. You need to analyze the
+        chunk and update the data on characters. You need to perform the
+        following tasks:
+
+        - Extract characters from the chunk.
+        - Build the character arc using current data and the chunk.
+        - Conduct a personality analysis of each character.
+        - List the strengths and weaknesses of each character.
+        - Update the data on characters.
+
+        Example character data:
+        {
+            "Alice": {
+                "strengths": ["kind", "intelligent"],
+                "weaknesses": ["naive"],
+                "personality": "ENFJ"
+                "arc": "Alice meets Bob and goes to wonderland."
+            },
+        }
+
+        # Output Format
+        Provide your response in JSON format. Do not wrap the JSON object in a
+        code block (```).
+    """
+
     user_content = (
         f"\n\n\nchunk:\n{chunk}"
         f"\n\n\ncharacters:\n{json.dumps(characters, sort_keys=True, indent=2)}"
