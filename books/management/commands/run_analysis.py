@@ -1,10 +1,63 @@
+import json
+import logging
+import os
 import time
 from datetime import datetime
 
+import openai
 import stanza
 from django.core.management.base import BaseCommand
+from dotenv import load_dotenv
 
 from books.models import BookAnalysis
+
+load_dotenv()
+
+client = openai.Client()
+client.api_key = os.getenv("OPENAI_API_KEY")
+
+
+def analyze_chunk(chunk, characters):
+    system_content = "\n".join(
+        [
+            "<reasoning>",
+            "- Simple Change: yes",
+            "</reasoning>",
+            "",
+            "You are an expert at analyzing books. "
+            "You need to extract characters from a "
+            "given book excerpt, conduct a personality "
+            "analysis of each character, and list their "
+            "strengths and weaknesses. You will be given "
+            "an excerpt from a book along with current "
+            "data on characters.",
+            "" "# Output Format",
+            "Provide your response in JSON format.",
+            "Do not wrap the JSON object in a code block (```)",
+        ]
+    )
+    user_content = (
+        f"\n\n\nchunk:\n{chunk}"
+        f"\n\n\ncharacters:\n{json.dumps(characters, sort_keys=True, indent=2)}"
+    )
+    completion = openai.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": system_content,
+            },
+            {
+                "role": "user",
+                "content": user_content,
+            },
+        ],
+    )
+    try:
+        return json.loads(completion.choices[0].message.content)
+    except json.JSONDecodeError:
+        logging.error(f"Failed to parse JSON: {completion.choices[0].message.content}")
+        return {}
 
 
 class Command(BaseCommand):
@@ -46,8 +99,9 @@ class Command(BaseCommand):
                 ]
                 num_read = len(next_batch)
 
-                analysis.characters = {"processed_sentences": num_read}
-
+                analysis.characters = analyze_chunk(
+                    " ".join(next_batch), analysis.characters or {}
+                )
                 analysis.last_read_index += num_read
                 analysis.percent_complete = min(
                     100, int((analysis.last_read_index / len(sentences)) * 100)
