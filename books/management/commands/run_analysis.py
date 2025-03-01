@@ -19,21 +19,22 @@ client.api_key = os.getenv("OPENAI_API_KEY")
 
 def analyze_chunk(chunk, characters):
     system_content = """
-        <reasoning>
-            - Simple Change: yes
-        </reasoning>
+        You are an expert literary analyst specializing in character
+        development. Your task is to analyze a book, one chunk at a time, and
+        update the existing character data based on new information.
 
-        You are an expert at analyzing books. You need to analyze the entire
-        book. You will be given one chunk of the book at a time. You will be
-        provided with the current data on characters. You need to analyze the
-        chunk and update the data on characters. You need to perform the
-        following tasks:
-
-        - Extract characters from the chunk.
-        - Build the character arc using current data and the chunk.
-        - Conduct a personality analysis of each character.
-        - List the strengths and weaknesses of each character.
-        - Update the data on characters.
+        # Task Requirements
+        For each chunk of text provided, perform the following tasks:
+        - Extract Characters: Identify all characters mentioned in the chunk,
+          adding new ones if they appear.
+        - Update Character Arc: Modify the character's arc based on new events,
+          ensuring continuity with previously stored data.
+        - Personality Analysis: Assess each character’s personality traits
+          based on their actions, dialogue, and descriptions.
+        - Strengths & Weaknesses: List specific strengths and weaknesses
+          exhibited in the chunk.
+        - Update Character Data: Modify or expand on the existing character
+          data using the latest information.
 
         Example character data:
         {
@@ -46,8 +47,10 @@ def analyze_chunk(chunk, characters):
         }
 
         # Output Format
-        Provide your response in JSON format. Do not wrap the JSON object in a
-        code block (```).
+        - Provide the updated character data in JSON format.
+        - Do not wrap the JSON object in a code block (```).
+        - Maintain a structured and concise format while ensuring all necessary
+          updates are included.
     """
 
     user_content = (
