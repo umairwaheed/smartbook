@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getCSRFToken } from "../helpers/auth";
 
 export default function FetchBook() {
   const [bookId, setBookId] = useState("");
@@ -35,12 +36,6 @@ export default function FetchBook() {
       setLoading(false);
     }
   };
-
-  // Function to get CSRF token from cookies
-  function getCSRFToken() {
-    const csrfCookie = document.cookie.split("; ").find((row) => row.startsWith("csrftoken="));
-    return csrfCookie ? csrfCookie.split("=")[1] : "";
-  }
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-lg">

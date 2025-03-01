@@ -15,13 +15,14 @@ export default function BookList({ books = [] }) {
               <th className="p-4 border border-gray-600 text-left">Author</th>
               <th className="p-4 border border-gray-600 text-left">Language</th>
               <th className="p-4 border border-gray-600 text-left">Category</th>
-              <th className="p-4 border border-gray-600 text-left">Read</th> {/* New Column */}
+              <th className="p-4 border border-gray-600 text-left">Read</th>
+              <th className="p-4 border border-gray-600 text-left">Analysis</th>
             </tr>
           </thead>
           <tbody>
             {books.length === 0 ? (
               <tr>
-                <td colSpan="6" className="p-4 text-center text-gray-600">
+                <td colSpan="7" className="p-4 text-center text-gray-600">
                   No books available.
                 </td>
               </tr>
@@ -36,6 +37,14 @@ export default function BookList({ books = [] }) {
                   <td className="p-4 border border-gray-300">
                     <Link to={`/books/${book.id}/read`} className="text-blue-500 hover:underline">
                       Read
+                    </Link>
+                  </td>
+                  <td className="p-4 border border-gray-300">
+                    <Link
+                      to={`/books/${book.id}/analysis`}
+                      className="text-blue-500 hover:underline"
+                    >
+                      Analysis
                     </Link>
                   </td>
                 </tr>

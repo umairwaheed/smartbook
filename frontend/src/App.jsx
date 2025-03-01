@@ -4,6 +4,7 @@ import Books from "./pages/Books";
 import UserBooks from "./pages/UserBooks";
 import FetchBook from "./pages/FetchBook";
 import BookReader from "./pages/BookReader";
+import BookAnalysis from "./pages/BookAnalysis";
 
 export default function App() {
   return (
@@ -65,6 +66,7 @@ export default function App() {
             <Route path="/my-books" element={<UserBooks />} />
             <Route path="/books" element={<Books />} />
             <Route path="/books/:bookId/read" element={<BookReader />} />
+            <Route path="/books/:bookId/analysis" element={<BookAnalysis />} />
           </Routes>
         </main>
       </div>
