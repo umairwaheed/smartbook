@@ -61,7 +61,7 @@ def analyze_chunk(chunk, characters):
 
 
 class Command(BaseCommand):
-    help = "Processes book analysis in chunks of 50 sentences at a time."
+    help = "Analyse books using LLM"
 
     def handle(self, *args, **kwargs):
         stanza.download("en")
@@ -78,32 +78,32 @@ class Command(BaseCommand):
                 continue
 
             for analysis in books_to_analyze:
-                book = analysis.book
-                text = book.text if book.text else ""
-                doc = nlp(text)
-
-                sentences = [x.text for x in doc.sentences]
+                document = nlp(analysis.book.text or "")
+                sentences = [x.text for x in document.sentences]
 
                 if analysis.last_read_index >= len(sentences):
                     analysis.percent_complete = 100
-                    analysis.analysis_completed_at = datetime.now()
+                    analysis.analysis_completed_at = datetime.utcnow()
                     analysis.save()
                     self.stdout.write(
-                        self.style.SUCCESS(f"Completed analysis for book: {book.title}")
+                        self.style.SUCCESS(
+                            f"Completed analysis for book: {analysis.book.title}"
+                        )
                     )
                     continue
 
-                next_batch = sentences[
+                batch = sentences[
                     analysis.last_read_index : analysis.last_read_index  # noqa: E203
                     + 200
                 ]
-                num_read = len(next_batch)
 
                 analysis.characters = analysis.characters or {}
                 analysis.characters.update(
-                    analyze_chunk(" ".join(next_batch), analysis.characters)
+                    analyze_chunk(" ".join(batch), analysis.characters)
                 )
-                analysis.last_read_index += num_read
+
+                batch_size = len(batch)
+                analysis.last_read_index += batch_size
                 analysis.percent_complete = min(
                     100, int((analysis.last_read_index / len(sentences)) * 100)
                 )
@@ -112,7 +112,7 @@ class Command(BaseCommand):
 
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f"Processed {num_read} sentences for '{book.title}'. "
+                        f"Processed {batch_size} sentences for '{analysis.book.title}'."
                         f"Progress: {analysis.percent_complete}%"
                     )
                 )
