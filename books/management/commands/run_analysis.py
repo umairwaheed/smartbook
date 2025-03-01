@@ -111,7 +111,7 @@ class Command(BaseCommand):
 
                 batch = sentences[
                     analysis.last_read_index : analysis.last_read_index  # noqa: E203
-                    + 200
+                    + 150
                 ]
 
                 analysis.characters = analysis.characters or {}
