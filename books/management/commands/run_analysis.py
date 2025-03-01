@@ -129,7 +129,7 @@ class Command(BaseCommand):
 
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f"Processed {batch_size} sentences for '{analysis.book.title}'."
+                        f"Processed {batch_size} sentences for {analysis.book.title}. "
                         f"Progress: {analysis.percent_complete}%"
                     )
                 )
