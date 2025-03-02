@@ -28,7 +28,7 @@ def analyze_chunk(chunk, characters):
         For each chunk of text provided, perform the following tasks:
         - Extract Characters: Identify all characters mentioned in the chunk,
           adding new ones if they appear.
-        - Update Character Arc: Modify the character's arc based on new events,
+        - Update Character Arc: Expand the character's arc based on new events,
           ensuring continuity with previously stored data.
         - Personality Analysis: Assess each character’s personality traits
           based on their actions, dialogue, and descriptions.
@@ -36,6 +36,7 @@ def analyze_chunk(chunk, characters):
           exhibited in the chunk.
         - Update Character Data: Modify or expand on the existing character
           data using the latest information.
+        - Understand the current character data.
 
         # JSON Structure and Formatting Rules
         - Always use the same JSON format for every response.
