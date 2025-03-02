@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from books.models import Book, BookAnalysis, UserBookAccess
+from books.models import Book, BookAnalysis, LanguageMap, UserBookAccess
 from books.serializers import BookAnalysisSerializer, BookSerializer
 from books.utils import NotFoundException, fetch_gutenberg_book
 
@@ -47,6 +47,14 @@ class BookViewSet(viewsets.ModelViewSet):
             if BookAnalysis.objects.filter(book=book).exists():
                 return Response(
                     {"error": "Analysis already exists for this book."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            if not LanguageMap.objects.filter(language=book.language).exists():
+                return Response(
+                    {
+                        "error": f"Language {book.language} not supported for analysis. Update language map."  # noqa
+                    },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 

@@ -41,3 +41,11 @@ class BookAnalysis(models.Model):
     percent_complete = models.PositiveSmallIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     analysis_completed_at = models.DateTimeField(blank=True, null=True)
+
+
+class LanguageMap(models.Model):
+    language = models.CharField(max_length=50, unique=True)
+    model_name = models.CharField(max_length=5)
+
+    def __str__(self):
+        return self.language

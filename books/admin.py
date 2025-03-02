@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from books.models import Book, BookAnalysis, UserBookAccess
+from books.models import Book, BookAnalysis, LanguageMap, UserBookAccess
 
 
 class BookAdmin(admin.ModelAdmin):
@@ -23,7 +23,14 @@ class BookAnalysisAdmin(admin.ModelAdmin):
     ordering = ("-created_at",)
 
 
+class LanguageMapAdmin(admin.ModelAdmin):
+    list_display = ("language", "model_name")
+    search_fields = ("language", "model_name")
+    ordering = ("language",)
+
+
 # Register models
 admin.site.register(Book, BookAdmin)
 admin.site.register(UserBookAccess, UserBookAccessAdmin)
 admin.site.register(BookAnalysis, BookAnalysisAdmin)
+admin.site.register(LanguageMap, LanguageMapAdmin)

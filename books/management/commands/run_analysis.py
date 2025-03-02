@@ -9,7 +9,7 @@ import stanza
 from django.core.management.base import BaseCommand
 from dotenv import load_dotenv
 
-from books.models import BookAnalysis
+from books.models import BookAnalysis, LanguageMap
 
 load_dotenv()
 
@@ -164,7 +164,18 @@ class Command(BaseCommand):
                 continue
 
             for analysis in books_to_analyze:
-                tokenizer = get_tokenizer("en")
+                try:
+                    model = LanguageMap.objects.filter(
+                        language=analysis.book.language
+                    ).get()
+                except LanguageMap.DoesNotExist:
+                    logging.warning(
+                        f"Language {analysis.book.language} not supported for analysis. Update language map."  # noqa
+                    )
+                    time.sleep(1)
+                    continue
+
+                tokenizer = get_tokenizer(model.model_name)
 
                 batch = get_next_batch(analysis, tokenizer)
                 process_batch(analysis, batch)
