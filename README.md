@@ -101,7 +101,6 @@ This project includes Swagger documentation for the API. You can access it at:
 http://127.0.0.1:8000/api/docs/
 ```
 
-
 ### Deployment
 
 ```bash
