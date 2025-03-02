@@ -47,4 +47,4 @@ jobs:
       - name: Run Frontend Linters
         run: |
           cd frontend
-          npm run lint
+          npm run check

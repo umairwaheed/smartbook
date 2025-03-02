@@ -8,6 +8,7 @@
     "watch": "vite build --watch --emptyOutDir --base /static --outDir static",
     "build": "vite build",
     "lint": "eslint . && prettier --write .",
+    "check": "eslint . && prettier --check .",
     "preview": "vite preview"
   },
   "dependencies": {
