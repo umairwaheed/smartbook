@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
     restart: always
-    command: bash ./scripts/run-with-gunicorn.sh 2
+    command: bash ./scripts/gunicorn 2
 
   async:
     image: smartbook
