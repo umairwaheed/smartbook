@@ -103,9 +103,7 @@ class FetchBookAsyncAPIView(View):
             )
 
         try:
-            data = await sync_to_async(request.body.decode)(
-                "utf-8"
-            )  # Django request.body is blocking
+            data = await sync_to_async(request.body.decode)("utf-8")
             body = json.loads(data)
             book_id = body.get("book_id")
 
