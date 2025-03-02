@@ -31,7 +31,6 @@ services:
     command: >
       bash -c "daphne -u /dev/shm/daphne.sock smartbook.asgi:application"
 
-
   proc:
     image: smartbook
     env_file:
