@@ -8,6 +8,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include("users.urls")),
     path("api/", include("books.urls")),
-    path("favicon.ico", RedirectView.as_view(url="/static/favicon.ico", permanent=True)),
+    path(
+        "favicon.ico", RedirectView.as_view(url="/static/favicon.ico", permanent=True)
+    ),
     re_path(r"^(?:.*)/?$", index, name="index"),
 ]

@@ -100,12 +100,53 @@ def analyze_chunk(chunk, characters):
         return {}
 
 
+def get_next_sentences(analysis, batch_size=150):
+    """Retrieve the next batch of sentences."""
+    book_text = analysis.book.text or ""
+
+    chunk_size = 5000
+    start_index = analysis.last_read_index
+    end_index = min(start_index + chunk_size, len(book_text))
+
+    # Process the chunk using NLP
+    nlp = stanza.Pipeline(lang="en", processors="tokenize")
+    document = nlp(book_text[start_index:end_index])
+
+    sentences = [x.text for x in document.sentences]
+
+    if not sentences:
+        return []
+
+    return sentences[:batch_size]
+
+
+def process_analysis_batch(analysis, batch):
+    """Process a batch of sentences, update character analysis, and save progress."""
+    if not batch:
+        analysis.percent_complete = 100
+        analysis.analysis_completed_at = datetime.utcnow()
+        analysis.save()
+        return
+
+    analysis.characters = analysis.characters or {}
+
+    updated_characters = analyze_chunk(" ".join(batch), analysis.characters)
+    analysis.characters.update(updated_characters)
+
+    # Update progress
+    analysis.last_read_index += len(batch)
+    analysis.percent_complete = min(
+        100, int((analysis.last_read_index / len(analysis.book.text)) * 100)
+    )
+
+    analysis.save()
+
+
 class Command(BaseCommand):
-    help = "Analyse books using LLM"
+    help = "Analyze books using LLM"
 
     def handle(self, *args, **kwargs):
         stanza.download("en")
-        nlp = stanza.Pipeline(lang="en", processors="tokenize")
 
         while True:
             books_to_analyze = BookAnalysis.objects.filter(percent_complete__lt=100)
@@ -118,41 +159,13 @@ class Command(BaseCommand):
                 continue
 
             for analysis in books_to_analyze:
-                document = nlp(analysis.book.text or "")
-                sentences = [x.text for x in document.sentences]
+                batch = get_next_sentences(analysis)
 
-                if analysis.last_read_index >= len(sentences):
-                    analysis.percent_complete = 100
-                    analysis.analysis_completed_at = datetime.utcnow()
-                    analysis.save()
-                    self.stdout.write(
-                        self.style.SUCCESS(
-                            f"Completed analysis for book: {analysis.book.title}"
-                        )
-                    )
-                    continue
-
-                batch = sentences[
-                    analysis.last_read_index : analysis.last_read_index  # noqa: E203
-                    + 150
-                ]
-
-                analysis.characters = analysis.characters or {}
-                analysis.characters.update(
-                    analyze_chunk(" ".join(batch), analysis.characters)
-                )
-
-                batch_size = len(batch)
-                analysis.last_read_index += batch_size
-                analysis.percent_complete = min(
-                    100, int((analysis.last_read_index / len(sentences)) * 100)
-                )
-
-                analysis.save()
+                process_analysis_batch(analysis, batch)
 
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f"Processed {batch_size} sentences for {analysis.book.title}. "
+                        f"Processed {len(batch)} sentences for {analysis.book.title}. "
                         f"Progress: {analysis.percent_complete}%"
                     )
                 )
