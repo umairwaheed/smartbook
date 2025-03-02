@@ -13,7 +13,7 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect("index")  # Redirect to home page or dashboard
+                return redirect("index")
             else:
                 form.add_error(None, "Invalid username or password.")
     else:
