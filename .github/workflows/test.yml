@@ -44,6 +44,7 @@ jobs:
 
       - name: Set up Django Environment
         env:
+          SECRET_KEY: testsecretkey
           DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
         run: |
           python manage.py migrate
@@ -51,5 +52,6 @@ jobs:
 
       - name: Run Tests with pytest
         env:
+          SECRET_KEY: testsecretkey
           DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
         run: pytest
