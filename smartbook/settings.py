@@ -32,6 +32,13 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = []
 
+if not DEBUG:
+    ALLOWED_HOSTS = ["74.207.234.105/", "127.0.0.1", "localhost"]
+    CSRF_TRUSTED_ORIGINS = [
+        "http://74.207.234.105/",
+        "http://127.0.0.1",
+        "http://localhost",
+    ]
 
 # Application definition
 
