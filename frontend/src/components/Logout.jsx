@@ -1,3 +1,5 @@
+import { getCSRFToken } from "../helpers/auth";
+
 export default function Logout() {
   const handleLogout = async () => {
     try {
@@ -6,7 +8,7 @@ export default function Logout() {
         credentials: "include", // Ensures session cookies are sent
         headers: {
           "Content-Type": "application/json",
-          "X-CSRFToken": getCSRFToken(), // Include CSRF token for security
+          "X-CSRFToken": getCSRFToken(),
         },
       });
 
@@ -24,12 +26,6 @@ export default function Logout() {
       console.error("Error logging out:", error);
     }
   };
-
-  // Function to get CSRF token from cookies
-  function getCSRFToken() {
-    const csrfCookie = document.cookie.split("; ").find((row) => row.startsWith("csrftoken="));
-    return csrfCookie ? csrfCookie.split("=")[1] : "";
-  }
 
   return (
     <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">

@@ -18,7 +18,7 @@ export default function FetchBook() {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRFToken": getCSRFToken(), // CSRF token for Django
+          "X-CSRFToken": getCSRFToken(),
         },
         body: JSON.stringify({ book_id: bookId }),
       });
@@ -41,7 +41,6 @@ export default function FetchBook() {
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-lg">
       <h2 className="text-2xl font-bold text-center mb-4">Fetch a Book</h2>
 
-      {/* Search Input */}
       <div className="flex items-center space-x-2">
         <input
           type="text"
@@ -58,13 +57,10 @@ export default function FetchBook() {
         </button>
       </div>
 
-      {/* Loading State */}
       {loading && <p className="text-center mt-4 text-gray-700">Fetching book...</p>}
 
-      {/* Error Message */}
       {error && <p className="text-center mt-4 text-red-500">{error}</p>}
 
-      {/* Display Book Details */}
       {book && (
         <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
           <h2 className="text-2xl font-bold text-center mb-6">Book Details</h2>

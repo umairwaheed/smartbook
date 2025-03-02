@@ -9,7 +9,6 @@ import BookAnalysis from "./pages/BookAnalysis";
 export default function App() {
   return (
     <div className="flex bg-gray-100">
-      {/* Sidebar - Fixed to always stay in view */}
       <aside className="bg-gray-800 text-white w-64 p-4 fixed h-full">
         <ul>
           <li className="py-2 p-2 rounded">
@@ -51,15 +50,12 @@ export default function App() {
         </ul>
       </aside>
 
-      {/* Main Content Area (Adjusted to prevent overlap) */}
       <div className="flex flex-col flex-1 ml-64">
-        {/* Topbar */}
         <header className="bg-white shadow-md p-4 flex justify-between items-center">
           <h1 className="text-lg font-bold">SmartBook</h1>
           <Logout />
         </header>
 
-        {/* Main Content */}
         <main className="flex-1 p-6 bg-white rounded-lg shadow-md m-4">
           <Routes>
             <Route path="/" element={<FetchBook />} />

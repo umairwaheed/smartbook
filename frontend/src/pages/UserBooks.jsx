@@ -17,7 +17,7 @@ export default function UserBooks() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Ensure cookies (authentication) are sent
+        credentials: "include",
       });
 
       if (!response.ok) {
