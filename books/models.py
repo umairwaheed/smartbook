@@ -44,6 +44,8 @@ class BookAnalysis(models.Model):
 
 
 class LanguageMap(models.Model):
+    """Stores supported languages and their corresponding Stanza model names."""
+
     language = models.CharField(max_length=50, unique=True)
     model_name = models.CharField(max_length=5)
 
