@@ -57,7 +57,8 @@ python -m venv venv
 ### Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
+cd frontend; npm install
 ```
 
 ### Set Up Environment Variables
@@ -85,6 +86,8 @@ python manage.py createsuperuser
 ### Run the Development Server
 
 ```bash
+cd frontend; npm run dev
+cd ..; ./scripts/watch
 python manage.py runserver
 ```
 
