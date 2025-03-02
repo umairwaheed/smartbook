@@ -93,6 +93,23 @@ python manage.py runserver
 
 Access the application at `http://127.0.0.1:8000/`.
 
+### Swagger
+
+This project includes Swagger documentation for the API. You can access it at:
+
+```bash
+http://127.0.0.1:8000/api/docs/
+```
+
+
+### Deployment
+
+```bash
+cd prod
+docker-compose build
+docker-compose up -d
+```
+
 ## Project Structure
 
 The project's directory structure is organized as follows:
