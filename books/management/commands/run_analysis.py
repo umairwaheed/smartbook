@@ -38,6 +38,11 @@ def analyze_chunk(chunk, characters):
 
         # JSON Structure and Formatting Rules
         - Always use the same JSON format for every response.
+        - The output must be a flat JSON object where character names are the
+          top-level keys.
+        - DO NOT include a "characters" wrapper object.
+        - Character names must be non-empty strings—if no valid characters are
+          found, return an empty JSON ({}) instead of including an empty key.
         - Include all fields, even if some values are empty ([] or "").
         - Ensure proper JSON syntax (e.g., include commas, avoid trailing
           commas, and use consistent quotation marks).
