@@ -59,6 +59,11 @@ export default function BookAnalysis() {
         credentials: "include",
       });
 
+      if (response.status === 400) {
+        const errorObject = await response.json();
+        throw new Error(errorObject.error);
+      }
+
       if (!response.ok) {
         throw new Error("Failed to start analysis");
       }

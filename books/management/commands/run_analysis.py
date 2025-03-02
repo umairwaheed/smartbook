@@ -127,7 +127,7 @@ def process_batch(analysis, batch):
     analysis.characters = analysis.characters or {}
 
     updated_characters = analyze_chunk(batch, analysis.characters)
-    analysis.characters = updated_characters
+    analysis.characters.update(updated_characters)
 
     # Update progress
     analysis.last_read_index += len(batch)
