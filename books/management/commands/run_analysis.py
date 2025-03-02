@@ -36,21 +36,39 @@ def analyze_chunk(chunk, characters):
         - Update Character Data: Modify or expand on the existing character
           data using the latest information.
 
-        Example character data:
+        # JSON Structure and Formatting Rules
+        - Always use the same JSON format for every response.
+        - Include all fields, even if some values are empty ([] or "").
+        - Ensure proper JSON syntax (e.g., include commas, avoid trailing
+          commas, and use consistent quotation marks).
+        - Maintain the exact field structure as shown in the example.
+        - Do not include example characters in the response. The JSON should
+          only contain characters found in the provided chunk.
+
+        # Example JSON Output
         {
             "Alice": {
                 "strengths": ["kind", "intelligent"],
                 "weaknesses": ["naive"],
-                "personality": "ENFJ"
-                "arc": "Alice meets Bob and goes to wonderland."
+                "personality": "ENFJ",
+                "arc": "Alice meets Bob and goes to Wonderland."
             },
+            "Bob": {
+                "strengths": [],
+                "weaknesses": [],
+                "personality": "",
+                "arc": ""
+            }
         }
 
         # Output Format
-        - Provide the updated character data in JSON format.
-        - Do not wrap the JSON object in a code block (```).
-        - Maintain a structured and concise format while ensuring all necessary
-          updates are included.
+        - Provide the output in strict JSON format following the structure
+          above.
+        - Do not wrap the JSON in a code block (```).
+        - Ensure field consistency: Every character must have "strengths",
+          "weaknesses", "personality", and "arc", even if empty.
+        - Use an empty list ([]) for missing strengths/weaknesses and an empty
+          string ("") for missing text fields.
     """
 
     user_content = (
