@@ -2,3 +2,4 @@ node_modules
 static
 build
 public
+templates/frontend/index.html
