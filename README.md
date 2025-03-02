@@ -12,6 +12,8 @@ SmartBook is a Django-based application designed to fetch, store, and analyze bo
   - [Apply Migrations](#apply-migrations)
   - [Create a Superuser](#create-a-superuser)
   - [Run the Development Server](#run-the-development-server)
+  - [Swagger](#swagger)
+  - [Deployment](#deployment)
 - [Project Structure](#project-structure)
 - [Key Features](#key-features)
   - [Book Fetching](#book-fetching)
