@@ -1,137 +1,145 @@
-# SmartBook Project
+# SmartBook
 
-## 🚀 Introduction
-SmartBook is a Django-based application that allows users to fetch and save books from Project Gutenberg using their book IDs. The app provides an API to access stored books and track user interactions.
+SmartBook is a Django-based application designed to fetch, store, and analyze books from Project Gutenberg using their book IDs. It provides APIs for accessing stored books and tracking user interactions.
 
----
+## Table of Contents
+- [Setup Instructions](#setup-instructions)
+  - [Prerequisites](#prerequisites)
+  - [Clone the Repository](#clone-the-repository)
+  - [Create a Virtual Environment & Activate It](#create-a-virtual-environment--activate-it)
+  - [Install Dependencies](#install-dependencies)
+  - [Set Up Environment Variables](#set-up-environment-variables)
+  - [Apply Migrations](#apply-migrations)
+  - [Create a Superuser](#create-a-superuser)
+  - [Run the Development Server](#run-the-development-server)
+- [Project Structure](#project-structure)
+- [Key Features](#key-features)
+  - [Book Fetching](#book-fetching)
+  - [User Management](#user-management)
+  - [Frontend Integration](#frontend-integration)
+- [Running Tests](#running-tests)
+- [Contributing](#contributing)
+- [License](#license)
 
-## 🛠️ Setup Instructions
+## Setup Instructions
 
-### 1️⃣ Prerequisites
+### Prerequisites
+
 Ensure you have the following installed:
-- **Python 3.13+**
-- **pip** (comes with Python)
-- **virtualenv** (recommended)
-- **PostgreSQL** (optional for production)
 
-### 2️⃣ Clone the Repository
-```sh
-git clone https://github.com/yourusername/smartbook.git
+- Python 3.13+
+- pip (comes with Python)
+- virtualenv (recommended)
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/umairwaheed/smartbook.git
 cd smartbook
 ```
 
-### 3️⃣ Create a Virtual Environment & Activate It
-```sh
+### Create a Virtual Environment & Activate It
+
+```bash
 python -m venv venv
 ```
-- **Windows**:
-  ```sh
+
+- **Windows:**
+  ```bash
   venv\Scripts\activate
   ```
-- **Mac/Linux**:
-  ```sh
+
+- **Mac/Linux:**
+  ```bash
   source venv/bin/activate
   ```
 
-### 4️⃣ Install Dependencies
-```sh
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
-pip install -r requirements-dev.txt  # For development dependencies
 ```
 
-### 5️⃣ Set Up Environment Variables
-Copy the sample `.env` file and configure it:
-```sh
+### Set Up Environment Variables
+
+Copy the sample environment file and adjust settings as needed:
+
+```bash
 cp env.sample .env
 ```
-Edit `.env` to include your database credentials and settings.
 
-### 6️⃣ Apply Migrations
-```sh
+Edit the `.env` file to configure your database and other settings.
+
+### Apply Migrations
+
+```bash
 python manage.py migrate
 ```
 
-### 7️⃣ Create a Superuser (For Admin Panel)
-```sh
+### Create a Superuser
+
+```bash
 python manage.py createsuperuser
 ```
-Follow the prompt to set up your admin credentials.
 
-### 8️⃣ Run the Development Server
-```sh
+### Run the Development Server
+
+```bash
 python manage.py runserver
 ```
-The project will be accessible at:
+
+Access the application at `http://127.0.0.1:8000/`.
+
+## Project Structure
+
+The project's directory structure is organized as follows:
+
 ```
-http://127.0.0.1:8000/
-```
-
----
-
-## 🏗️ Project Structure
-```
-smartbook/            # Main project folder
-│── manage.py         # Django CLI script
-│── db.sqlite3        # SQLite Database (default, replaceable with PostgreSQL)
-│── .env              # Environment variables (ignored in Git)
-│── books/            # Books app (fetches and stores books)
-│   │── views.py      # API Views
-│   │── models.py     # Database models
-│   │── urls.py       # URL configuration
-│   │── serializers.py  # DRF Serializers
-│── users/            # User authentication app
-│── scripts/          # Custom scripts
-│── smartbook/        # Project settings and configuration
-│── requirements.txt  # Project dependencies
-│── README.md         # Documentation
-```
-
----
-
-## 📜 API Endpoints
-The following API endpoints are available:
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/books/` | GET | Fetch all books |
-| `/api/books/<id>/` | GET | Fetch a specific book by ID |
-| `/api/books/` | POST | Add a new book by Gutenberg ID |
-| `/api/users/` | GET | Fetch user details |
-
-Use tools like **Postman** or **cURL** to test the API.
-
----
-
-## 🔍 Running Tests
-To ensure everything works correctly, run:
-```sh
-python manage.py test books
-pytest  # If using pytest
+smartbook/
+├── books/                  # Book-related functionalities
+├── frontend/               # React frontend application
+├── scripts/                # Utility scripts
+├── smartbook/              # Core project settings and configurations
+├── users/                  # User management and authentication
+├── .dockerignore           # Docker ignore file
+├── .flake8                 # Flake8 configuration
+├── .gitignore              # Git ignore file
+├── README.md               # Project documentation
+├── env.sample              # Sample environment variables file
+├── manage.py               # Django management script
+├── pyproject.toml          # Project configuration
+├── requirements-dev.txt    # Development dependencies
+└── requirements.txt        # Production dependencies
 ```
 
----
+## Key Features
 
-## 🚀 Deployment
-For production, set up **PostgreSQL** and configure your environment:
-```sh
-DATABASE_URL=postgres://user:password@localhost:5432/smartbook
+### Book Fetching
+
+Users can fetch and save books from Project Gutenberg by providing the book's ID. The application retrieves the book's content and stores it in the database for analysis and reading.
+
+### User Management
+
+The application includes user authentication and profile management, allowing users to track their interactions with the books.
+
+### Frontend Integration
+
+A React-based frontend provides an interactive user interface for book exploration and analysis.
+
+## Running Tests
+
+To run the test suite using `pytest`, execute:
+
+```bash
+pytest
 ```
-Use **Gunicorn and Nginx** or **Heroku** for deployment.
 
----
+Ensure all dependencies from `requirements-dev.txt` are installed.
 
-## 📜 License
-This project is licensed under the MIT License.
+## Contributing
 
-## 💡 Contributing
-1. Fork the repository.
-2. Create a new branch.
-3. Make your changes.
-4. Submit a pull request.
+Contributions are welcome! Please fork the repository and submit a pull request with your changes.
 
----
+## License
 
-💬 **Need Help?** Feel free to open an issue or reach out!
-
----
-Happy Coding! 🎉
+This project is licensed under the MIT License. See the `LICENSE` file for details.
