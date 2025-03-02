@@ -143,6 +143,14 @@ Users can fetch and save books from Project Gutenberg by providing the book's ID
 
 The application includes user authentication and profile management, allowing users to track their interactions with the books.
 
+### Admin Site
+
+The Django admin site provides an interface for managing users, books, and other application data. It can be accessed at:
+
+```bash
+http://127.0.0.1:8000/admin/
+```
+
 ### Frontend Integration
 
 A React-based frontend provides an interactive user interface for book exploration and analysis.
