@@ -22,6 +22,8 @@ class BookSerializer(serializers.ModelSerializer):
 
 
 class BookAnalysisSerializer(serializers.ModelSerializer):
+    book = BookSerializer(read_only=True)
+
     class Meta:
         model = BookAnalysis
         fields = [
@@ -29,5 +31,6 @@ class BookAnalysisSerializer(serializers.ModelSerializer):
             "characters",
             "percent_complete",
             "analysis_completed_at",
+            "book",
         ]
         read_only_fields = ["created_at"]

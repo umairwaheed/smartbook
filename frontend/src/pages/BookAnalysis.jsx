@@ -81,7 +81,7 @@ export default function BookAnalysis() {
 
   return (
     <div className="max-w-5xl mx-auto mt-10 p-6 bg-white rounded-lg">
-      <h2 className="text-2xl font-bold text-center mb-6">Book Analysis</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">{analysis.book.title}</h2>
 
       <div className="p-4 border border-gray-300 rounded-lg bg-gray-100 mb-6">
         {analysis ? (
