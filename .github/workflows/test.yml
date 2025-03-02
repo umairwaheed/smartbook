@@ -52,4 +52,4 @@ jobs:
       - name: Run Tests with pytest
         env:
           DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
-        run: pytest --disable-warnings --cov=. --cov-report=xml
+        run: pytest
