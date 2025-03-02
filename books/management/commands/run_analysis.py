@@ -8,6 +8,7 @@ import openai
 import stanza
 from django.core.management.base import BaseCommand
 from dotenv import load_dotenv
+from stanza.resources.common import UnknownLanguageError
 
 from books.models import BookAnalysis, LanguageMap
 
@@ -130,7 +131,6 @@ def process_batch(analysis, batch):
     updated_characters = analyze_chunk(batch, analysis.characters)
     analysis.characters.update(updated_characters)
 
-    # Update progress
     analysis.last_read_index += len(batch)
     analysis.percent_complete = min(
         100, int((analysis.last_read_index / len(analysis.book.text)) * 100)
@@ -176,7 +176,14 @@ class Command(BaseCommand):
                     time.sleep(1)
                     continue
 
-                tokenizer = get_tokenizer(model.model_name)
+                try:
+                    tokenizer = get_tokenizer(model.model_name)
+                except UnknownLanguageError:
+                    logging.warning(
+                        f"Language {analysis.book.language} not supported by stanza."
+                    )
+                    time.sleep(1)
+                    continue
 
                 batch = get_next_batch(analysis, tokenizer)
                 process_batch(analysis, batch)
