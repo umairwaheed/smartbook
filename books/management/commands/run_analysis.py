@@ -15,6 +15,7 @@ load_dotenv()
 
 client = openai.Client()
 client.api_key = os.getenv("OPENAI_API_KEY")
+tokenizer_cache = {}
 
 
 def analyze_chunk(chunk, characters):
@@ -95,32 +96,27 @@ def analyze_chunk(chunk, characters):
     )
     try:
         return json.loads(completion.choices[0].message.content)
-    except json.JSONDecodeError:
-        logging.error(f"Failed to parse JSON: {completion.choices[0].message.content}")
+    except json.JSONDecodeError as e:
+        logging.error(
+            f"Failed to parse JSON: {completion.choices[0].message.content}: {e}"
+        )
         return {}
 
 
-def get_next_sentences(analysis, batch_size=150):
+def get_next_batch(analysis, tokenizer, batch_size=150) -> str:
     """Retrieve the next batch of sentences."""
     book_text = analysis.book.text or ""
 
-    chunk_size = 5000
     start_index = analysis.last_read_index
-    end_index = min(start_index + chunk_size, len(book_text))
+    end_index = min(start_index + 5000, len(book_text))
 
-    # Process the chunk using NLP
-    nlp = stanza.Pipeline(lang="en", processors="tokenize")
-    document = nlp(book_text[start_index:end_index])
+    document = tokenizer(book_text[start_index:end_index])
 
     sentences = [x.text for x in document.sentences]
-
-    if not sentences:
-        return []
-
-    return sentences[:batch_size]
+    return " ".join(sentences[:batch_size])
 
 
-def process_analysis_batch(analysis, batch):
+def process_batch(analysis, batch):
     """Process a batch of sentences, update character analysis, and save progress."""
     if not batch:
         analysis.percent_complete = 100
@@ -130,8 +126,8 @@ def process_analysis_batch(analysis, batch):
 
     analysis.characters = analysis.characters or {}
 
-    updated_characters = analyze_chunk(" ".join(batch), analysis.characters)
-    analysis.characters.update(updated_characters)
+    updated_characters = analyze_chunk(batch, analysis.characters)
+    analysis.characters = updated_characters
 
     # Update progress
     analysis.last_read_index += len(batch)
@@ -142,11 +138,20 @@ def process_analysis_batch(analysis, batch):
     analysis.save()
 
 
+def get_tokenizer(language):
+    if language in tokenizer_cache:
+        return tokenizer_cache[language]
+
+    stanza.download(language)
+    tokenizer = stanza.Pipeline(lang=language, processors="tokenize")
+    tokenizer_cache[language] = tokenizer
+    return tokenizer
+
+
 class Command(BaseCommand):
     help = "Analyze books using LLM"
 
     def handle(self, *args, **kwargs):
-        stanza.download("en")
 
         while True:
             books_to_analyze = BookAnalysis.objects.filter(percent_complete__lt=100)
@@ -159,13 +164,14 @@ class Command(BaseCommand):
                 continue
 
             for analysis in books_to_analyze:
-                batch = get_next_sentences(analysis)
+                tokenizer = get_tokenizer("en")
 
-                process_analysis_batch(analysis, batch)
+                batch = get_next_batch(analysis, tokenizer)
+                process_batch(analysis, batch)
 
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f"Processed {len(batch)} sentences for {analysis.book.title}. "
+                        f"Processed {len(batch)} characters for {analysis.book.title}. "
                         f"Progress: {analysis.percent_complete}%"
                     )
                 )
