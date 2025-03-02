@@ -80,7 +80,7 @@ export default function BookAnalysis() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-5xl mx-auto mt-10 p-6 bg-white rounded-lg">
       <h2 className="text-2xl font-bold text-center mb-6">Book Analysis</h2>
 
       <div className="p-4 border border-gray-300 rounded-lg bg-gray-100 mb-6">
@@ -106,7 +106,7 @@ export default function BookAnalysis() {
           <h3 className="text-xl font-bold mb-4">Character Analysis</h3>
           <ul className="space-y-4">
             {Object.entries(analysis.characters).map(([characterName, details]) => (
-              <li key={characterName} className="p-4 border border-gray-300 rounded-lg shadow">
+              <li key={characterName} className="p-4 border border-gray-300 rounded-lg">
                 <h4 className="text-lg font-semibold text-blue-600">{characterName}</h4>
 
                 {details.arc && (
