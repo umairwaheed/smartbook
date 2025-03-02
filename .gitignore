@@ -12,8 +12,6 @@ env/
 db.sqlite3
 *.sqlite3-journal
 /media/
-staticfiles/
-static/
 
 # Logs
 logs/
