@@ -7,7 +7,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 
-from books.models import Book, BookAnalysis, UserBookAccess
+from books.models import Book, BookAnalysis, LanguageMap, UserBookAccess
 from users.models import User
 
 
@@ -248,10 +248,10 @@ class BookAnalysisAPITestCase(APITestCase):
             username="testuser", password="testpassword"
         )
 
-        # Create a book
-        self.book = Book.objects.create(gutenberg_id=123, title="Test Book")
+        self.book = Book.objects.create(
+            gutenberg_id=123, title="Test Book", language="English"
+        )
 
-        # Create an analysis object for the book
         self.analysis = BookAnalysis.objects.create(
             book=self.book,
             characters={"main": "Alice", "sidekick": "Bob"},
@@ -260,7 +260,6 @@ class BookAnalysisAPITestCase(APITestCase):
 
         self.analysis_url = f"/api/books/{self.book.id}/analysis/"
 
-        # Authenticate user
         self.client.force_authenticate(user=self.user)
 
     def test_get_book_analysis_success(self):
@@ -294,28 +293,23 @@ class BookAnalysisPostAPITestCase(APITestCase):
             username="testuser", password="testpassword"
         )
 
-        # Create a book
-        self.book = Book.objects.create(title="Test Book", gutenberg_id=123)
-
-        # URL for posting book analysis
+        self.book = Book.objects.create(
+            title="Test Book", gutenberg_id=123, language="English"
+        )
+        LanguageMap.objects.create(language="English", model_name="en")
         self.analysis_url = f"/api/books/{self.book.id}/analysis/"
 
-        # Authenticate user
         self.client.force_authenticate(user=self.user)
 
     def test_create_book_analysis_success(self):
         """Test creating a new book analysis when none exists"""
         data = {}
         response = self.client.post(self.analysis_url, data, format="json")
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        # Ensure the analysis was actually created in the database
         self.assertTrue(BookAnalysis.objects.filter(book=self.book).exists())
 
     def test_create_book_analysis_already_exists(self):
         """Test that trying to create an analysis when one already exists returns 400"""
-        # Create an analysis first
         BookAnalysis.objects.create(
             book=self.book, characters={"main": "Alice"}, percent_complete=50
         )
@@ -328,9 +322,6 @@ class BookAnalysisPostAPITestCase(APITestCase):
             response.data["error"], "Analysis already exists for this book."
         )
 
-        # Ensure the original analysis is unchanged
         analysis = BookAnalysis.objects.get(book=self.book)
-        self.assertEqual(
-            analysis.characters, {"main": "Alice"}
-        )  # Should still be the same
-        self.assertEqual(analysis.percent_complete, 50)  # Should remain unchanged
+        self.assertEqual(analysis.characters, {"main": "Alice"})
+        self.assertEqual(analysis.percent_complete, 50)

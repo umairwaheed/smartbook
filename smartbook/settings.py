@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "drf_spectacular",
     "books",
     "users",
     "frontend",
@@ -144,6 +145,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PARSER_CLASSES": [
         "rest_framework.parsers.JSONParser",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 # Redirects unauthenticated users to the login page
@@ -153,3 +155,10 @@ LOGIN_URL = "/users/login/"
 LOGIN_REDIRECT_URL = "/"
 
 LOGOUT_REDIRECT_URL = "/users/login/"
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "SmartBook API",
+    "DESCRIPTION": "API documentation for the SmartBook",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}

@@ -4,6 +4,7 @@ from asgiref.sync import sync_to_async
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -14,11 +15,18 @@ from books.serializers import BookAnalysisSerializer, BookSerializer
 from books.utils import NotFoundException, fetch_gutenberg_book
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="List all books", description="Retrieve a list of all books."
+    ),
+    retrieve=extend_schema(summary="Retrieve book details"),
+)
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(summary="Record book access")
     @action(detail=True, methods=["post"])
     def access(self, request, pk=None):
         book = get_object_or_404(Book, pk=pk)
@@ -26,6 +34,7 @@ class BookViewSet(viewsets.ModelViewSet):
         UserBookAccess.objects.get_or_create(user=user, book=book)
         return Response({"message": "Book access recorded."})
 
+    @extend_schema(summary="Retrieve or create book analysis")
     @action(detail=True, methods=["get", "post"])
     def analysis(self, request, pk=None):
         """Retrieve the book analysis or create a new one if it doesn't exist"""
@@ -34,8 +43,7 @@ class BookViewSet(viewsets.ModelViewSet):
         if request.method == "GET":
             try:
                 analysis = BookAnalysis.objects.get(book=book)
-                serializer = BookAnalysisSerializer(analysis)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response(BookAnalysisSerializer(analysis).data)
             except BookAnalysis.DoesNotExist:
                 return Response(
                     {"error": "Analysis not found for this book."},
@@ -43,7 +51,6 @@ class BookViewSet(viewsets.ModelViewSet):
                 )
 
         elif request.method == "POST":
-            # Prevent updating an existing analysis
             if BookAnalysis.objects.filter(book=book).exists():
                 return Response(
                     {"error": "Analysis already exists for this book."},
