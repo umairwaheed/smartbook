@@ -29,7 +29,6 @@ class LanguageMapAdmin(admin.ModelAdmin):
     ordering = ("language",)
 
 
-# Register models
 admin.site.register(Book, BookAdmin)
 admin.site.register(UserBookAccess, UserBookAccessAdmin)
 admin.site.register(BookAnalysis, BookAnalysisAdmin)
